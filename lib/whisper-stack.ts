@@ -81,17 +81,15 @@ export class WhisperStack extends Stack {
     const productionVariants: sm.CfnEndpointConfig.ProductionVariantProperty[] = [{
       variantName: 'WhisperVariant',
       modelName: whisperModel.attrModelName,
+      /** @see https://console.aws.amazon.com/servicequotas/home/services/sagemaker/quotas */
       initialInstanceCount: 1,
       initialVariantWeight: 1,
       /** @see https://aws.amazon.com/jp/sagemaker/pricing/ */
-      instanceType: 'ml.g5.4xlarge',
+      instanceType: 'ml.g5.8xlarge',
     }]
     const whisperEndpointConfig = new sm.CfnEndpointConfig(this, 'WhisperEndpointConfig', {
       productionVariants,
       asyncInferenceConfig: {
-        clientConfig: {
-          maxConcurrentInvocationsPerInstance: 1,
-        },
         outputConfig: {
           s3OutputPath: bucket.s3UrlForObject('output'),
           s3FailurePath: bucket.s3UrlForObject('failure'),
