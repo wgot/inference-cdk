@@ -6,6 +6,7 @@ import {
   // DockerImage,
   Duration,
   RemovalPolicy,
+  aws_budgets as budgets,
   aws_iam as iam,
   aws_lambda as lambda,
   aws_s3 as s3,
@@ -24,6 +25,28 @@ export class BaseStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props)
 
+    new budgets.CfnBudget(this, 'Budget', {
+      budget: {
+        budgetType: 'COST',
+        timeUnit: 'MONTHLY',
+        budgetLimit: {
+          amount: 300,
+          unit: 'USD'
+        },
+      },
+      notificationsWithSubscribers: [{
+        notification: {
+          comparisonOperator: 'GREATER_THAN',
+          notificationType: 'ACTUAL',
+          threshold: 100,
+          thresholdType: 'ABSOLUTE_VALUE',
+        },
+        subscribers: [{
+          subscriptionType: 'EMAIL',
+          address: this.node.tryGetContext('address'),
+        }]
+      }]
+    })
     this.bucket = new s3.Bucket(this, 'Bucket', {
       autoDeleteObjects: true,
       removalPolicy: RemovalPolicy.DESTROY,
