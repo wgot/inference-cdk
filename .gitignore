@@ -12,3 +12,4 @@ cdk.context.json
 .DS_Store
 *.gz
 *.pt
+*.out
