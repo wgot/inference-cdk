@@ -84,7 +84,7 @@ export class WhisperStack extends Stack {
       initialInstanceCount: 1,
       initialVariantWeight: 1,
       /** @see https://aws.amazon.com/jp/sagemaker/pricing/ */
-      instanceType: 'ml.p3.2xlarge',
+      instanceType: 'ml.g5.4xlarge',
     }]
     const whisperEndpointConfig = new sm.CfnEndpointConfig(this, 'WhisperEndpointConfig', {
       productionVariants,
